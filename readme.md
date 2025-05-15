@@ -32,7 +32,7 @@ Ensure the media directory exists for uploaded files (e.g., question banks).
 You can create it manually if it doesn't exist:
 `mkdir media` in your terminal
 `cd media` in your terminal
-`mkdir profile_pics` in your terminal
-`mkdir medical_records` in your terminal
+`mkdir question_banks` in your terminal
+
 
 
