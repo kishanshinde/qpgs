@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}View Question Paper{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="mb-3">
+        <a href="{% url 'exam_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+    
+    <h2>{{ paper.title }}</h2>
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Module:</strong> {{ paper.module }}</p>
+            <p><strong>Created By:</strong> {{ paper.created_by }}</p>
+            <p><strong>Created At:</strong> {{ paper.created_at|date:"d M Y, h:i A" }}</p>
+            <p><strong>Status:</strong> {{ paper.status|title }}</p>
+            
+            {% for module_data in questions_per_module %}
+            <h4 class="mt-4">{{ module_data.module }} Questions ({{ module_data.questions|length }}):</h4>
+            {% if module_data.questions %}
+            <ol>
+                {% for question in module_data.questions %}
+                    <li class="mb-2">{{ question }}</li>
+                {% endfor %}
+            </ol>
+            {% else %}
+            <p class="text-muted">No questions assigned to this module.</p>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        {% if paper.status == 'draft' %}
+            <a href="{% url 'edit_question_paper' paper.id %}" class="btn btn-primary">Edit Paper</a>
+        {% endif %}
+        <a href="{% url 'export_pdf' paper.id %}" class="btn btn-success">Export as PDF</a>
+    </div>
+</div>
+{% endblock %}

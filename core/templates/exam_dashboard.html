@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Exam Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Exam Dashboard</h2>
+    
+    <!-- Question Bank Selection Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Generate New Question Paper</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'generate_question_paper' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="question_bank">Select Question Bank:</label>
+                    <select class="form-control" id="question_bank" name="question_bank" required>
+                        {% for bank in available_banks %}
+                            <option value="{{ bank.id }}">{{ bank.title }} ({{ bank.module }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="module">Module Numbers (e.g., 1 or 1,2,3):</label>
+                    <input type="text" class="form-control" id="module" name="module" placeholder="e.g., 1 or 1,2,3" required>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="num_questions">Number of Questions per Module:</label>
+                    <input type="number" class="form-control" id="num_questions" name="num_questions" 
+                           value="10" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Generate Question Paper</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Existing Question Papers Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Your Question Papers</h4>
+        </div>
+        <div class="card-body">
+            {% if question_papers %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Module</th>
+                                <th>Created At</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for paper in question_papers %}
+                            <tr>
+                                <td>{{ paper.title }}</td>
+                                <td>{{ paper.module }}</td>
+                                <td>{{ paper.created_at|date:"d M Y, h:i A" }}</td>
+                                <td><span class="badge {% if paper.status == 'draft' %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ paper.status|title }}
+                                </span></td>
+                                <td>
+                                    <a href="{% url 'view_question_paper' paper.id %}" class="btn btn-sm btn-info">View</a>
+                                    {% if paper.status == 'draft' %}
+                                        <a href="{% url 'edit_question_paper' paper.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                    {% endif %}
+                                    <a href="{% url 'export_pdf' paper.id %}" class="btn btn-sm btn-success">PDF</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No question papers generated yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

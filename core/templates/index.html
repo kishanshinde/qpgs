@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Welcome to Question Paper Distribution System</h1>
+    <p class="lead">A secure system for managing and distributing question papers</p>
+    
+    {% if not user.is_authenticated %}
+    <div class="mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary me-2">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-outline-primary">Register</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+</html>
+</body>
+</html>
